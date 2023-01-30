@@ -1,0 +1,13 @@
+[package]
+name = "easymongo"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+description = "A simple and easy to use lib for interacting with MongoDB"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bson = "2.5.0"
+mongodb = "2.3.1"
+serde = { version = "1.0.152", features = ["derive"] }
