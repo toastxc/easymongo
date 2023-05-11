@@ -11,18 +11,19 @@ pub struct Mongo {
 }
 
 #[allow(dead_code)]
-pub async fn generate_database(mongo: Mongo) -> mongodb::Database {
+pub async fn generate_database(mongo: &Mongo) -> Result<mongodb::Database, mongodb::error::Error> {
     let options = format!(
         "mongodb://{}:{}@{}:{}",
         mongo.username,
         mongo.password,
-        mongo.ip.unwrap_or(String::from("localhost")),
-        mongo.port.unwrap_or(String::from("27017"))
+        mongo.ip.clone().unwrap_or(String::from("localhost")),
+        mongo.port.clone().unwrap_or(String::from("27017"))
     );
 
-    mongodb::Client::with_options(ClientOptions::parse(options).await.unwrap())
-        .expect("could not connect to database")
-        .database(&mongo.database)
+    Ok(
+        mongodb::Client::with_options(ClientOptions::parse(options).await?)?
+            .database(&mongo.database),
+    )
 }
 
 impl Mongo {
@@ -56,7 +57,7 @@ impl Mongo {
         self
     }
     #[allow(dead_code)]
-    pub async fn db_generate(self) -> mongodb::Database {
+    pub async fn db_generate(&self) -> Result<mongodb::Database, mongodb::error::Error> {
         generate_database(self).await
     }
 }
